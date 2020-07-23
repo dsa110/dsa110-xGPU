@@ -62,6 +62,8 @@ NVCCFLAGS += -maxrregcount=72
 endif
 
 #NVCCFLAGS += -Xptxas -dlcm=cg # disable L1 cache
+# TRIANGULAR order
+NVCCFLAGS += -DMATRIX_ORDER_TRIANGULAR
 
 # Possibly (re-)build xgpu_version.h
 $(shell $(SHELL) gen_xgpu_version.sh)
