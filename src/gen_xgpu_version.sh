@@ -3,7 +3,7 @@
 VF=xgpu_version.h
 
 # Requires that version tags are annotated and start with v#
-VN=$(git describe --match "v[0-9]*" --abbrev=7 HEAD 2>/dev/null)
+VN=$(git describe --match "dsa[0-9]*" --abbrev=7 HEAD 2>/dev/null)
 
 # Redirect stdout to stderr
 git update-index -q --refresh 1>&2

@@ -11,7 +11,14 @@ endif
 
 DEBUG ?= -O3
 TEXTURE_DIM ?= 1
-CUDA_ARCH ?= sm_30
+# start DSA110 specific
+CUDA_ARCH=sm_75
+NPOL=2
+NSTATION=64
+NFREQUENCY=768
+NTIME_PIPE=128
+NTIME=2048
+# end DSA110 specific
 
 NVCC = $(CUDA_DIR)/bin/nvcc
 prefix ?= /usr/local
