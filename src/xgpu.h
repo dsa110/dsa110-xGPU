@@ -216,7 +216,7 @@ void xgpuFree(XGPUContext *context);
 //                        but not necessrily all computations.
 // SYNCOP_SYNC_COMPUTE  - Waits for all computations (and transfers) to
 //                        complete, but does not dump.
-int xgpuCudaXengine(XGPUContext *context, int syncOp);
+int xgpuCudaXengine(XGPUContext *context, ComplexInput *array_hd, int syncOp);
 
 // Functions in cpu_util.cc
 

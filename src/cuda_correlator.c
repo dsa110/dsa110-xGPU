@@ -173,6 +173,10 @@ int main(int argc, char** argv) {
   xgpuSwizzleInput(context.array_h, array_h);
 #endif
 
+  // try copying to GPU
+  ComplexInput *array_hd;
+  cudaMalloc(array_hd, context.array_len*sizeof(ComplexInput));
+
   // ompXengine always uses TRIANGULAR_ORDER
   unsigned int ompMatLength = nfrequency * ((nstation+1)*(nstation/2)*npol*npol);
   omp_matrix_h = (Complex *) malloc(ompMatLength*sizeof(Complex));
@@ -200,7 +204,7 @@ int main(int argc, char** argv) {
 #ifdef RUNTIME_STATS
       clock_gettime(CLOCK_MONOTONIC, &tic);
 #endif
-      xgpu_error = xgpuCudaXengine(&context, i==count-1 ? finalSyncOp : syncOp);
+      xgpu_error = xgpuCudaXengine(&context, array_hd, i==count-1 ? finalSyncOp : syncOp);
 #ifdef RUNTIME_STATS
       clock_gettime(CLOCK_MONOTONIC, &toc);
 #endif
@@ -269,6 +273,7 @@ cleanup:
 
   // free gpu memory
   xgpuFree(&context);
+  cudaFree(array_hd);
 
 #ifdef DP4A
   free(array_h);

@@ -540,7 +540,7 @@ void xgpuFree(XGPUContext *context)
   CUBE_WRITE();
 }
 
-int xgpuCudaXengine(XGPUContext *context, ComplexInput *array_hd, int syncOp)
+int xgpuCudaXengine(XGPUContext *context, int syncOp)
 {
   XGPUInternalContext *internal = (XGPUInternalContext *)context->internal;
   if(!internal) {
@@ -587,7 +587,7 @@ int xgpuCudaXengine(XGPUContext *context, ComplexInput *array_hd, int syncOp)
   // buffer 0.  This is a no-op unless previous call to xgpuCudaXengine() had
   // SYNCOP_NONE or SYNCOP_SYNC_TRANSFER.
   cudaStreamWaitEvent(streams[0], kernelCompletion[0], 0);
-  CUBE_ASYNC_COPY_CALL(array_d[0], array_hd, vecLengthPipe*sizeof(ComplexInput), cudaMemcpyDeviceToDevice, streams[0]);
+  CUBE_ASYNC_COPY_CALL(array_d[0], array_hp, vecLengthPipe*sizeof(ComplexInput), cudaMemcpyHostToDevice, streams[0]);
   cudaEventRecord(copyCompletion[0], streams[0]); // record the completion of the h2d transfer
   checkCudaError();
 
@@ -624,7 +624,7 @@ int xgpuCudaXengine(XGPUContext *context, ComplexInput *array_hd, int syncOp)
 
     // Download next chunk of input data
     cudaStreamWaitEvent(streams[0], kernelCompletion[p%2], 0); // only start the transfer once the kernel has completed
-    CUBE_ASYNC_COPY_CALL(array_load, array_hd+p*vecLengthPipe, vecLengthPipe*sizeof(ComplexInput), cudaMemcpyDeviceToDevice, streams[0]);
+    CUBE_ASYNC_COPY_CALL(array_load, array_hp+p*vecLengthPipe, vecLengthPipe*sizeof(ComplexInput), cudaMemcpyHostToDevice, streams[0]);
     cudaEventRecord(copyCompletion[p%2], streams[0]); // record the completion of the h2d transfer
     checkCudaError();
   }
